@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #f2ecdf;
+      --paper-deep: #e7dfcc;
+      --ink: #221f1a;
+      --ink-soft: #5c554a;
+      --vermilion: #e1452c;
+      --teal: #0f5e57;
+      --stamp-green: #1e7a46;
+      --rule: #c9bea8;
+      --rule-dark: #8a8172;
+      --grain-opacity: 0.06;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'IBM Plex Mono', 'Courier New', monospace;
+      background:
+        radial-gradient(rgba(0,0,0,0.045) 1px, transparent 1px) 0 0 / 22px 22px,
+        var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+      padding: 40px 24px;
+      position: relative;
+    }
+    /* Subtle film grain overlay */
+    body::after {
+      content: "";
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: var(--grain-opacity);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .page {
+      max-width: 980px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      background: var(--paper);
+      border: 2px solid var(--ink);
+      box-shadow: 6px 6px 0 var(--ink);
+    }
+    /* Perforation / fold line at top of sheet */
+    .page::before {
+      content: "";
+      display: block; height: 3px;
+      background: repeating-linear-gradient(90deg, var(--ink) 0 6px, transparent 6px 13px);
+    }
+    /* ===== Masthead / Header ===== */
+    .masthead {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 24px;
+      padding: 24px 28px 16px;
+      border-bottom: 4px double var(--ink);
+    }
+    .masthead .left .kicker {
+      font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--vermilion); font-weight: 600;
+    }
+    .masthead h1.brand {
+      font-family: 'Fraunces', Georgia, serif;
+      font-weight: 700; font-size: 2.1rem; line-height: 1.05;
+      letter-spacing: -0.01em;
+    }
+    .masthead h1.brand em { font-style: italic; color: var(--vermilion); }
+    .masthead .right { text-align: right; }
+    .sheet-no {
+      font-size: 0.72rem; color: var(--ink-soft);
+      border: 1px solid var(--rule-dark); padding: 4px 8px;
+      display: inline-block; background: var(--paper-deep);
+    }
+    /* ===== Nav ===== */
+    .ruled-nav {
+      display: flex; flex-wrap: wrap; gap: 0;
+      border-bottom: 4px double var(--ink);
+    }
+    .ruled-nav a {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em;
+      color: var(--ink); text-decoration: none;
+      padding: 12px 20px;
+      border-right: 1px solid var(--rule-dark);
+      background: var(--paper);
+      position: relative;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+    .ruled-nav a:hover { background: var(--ink); color: var(--paper); }
+    .ruled-nav a.active {
+      background: var(--vermilion); color: var(--paper);
+    }
+    .ruled-nav a.empty { flex: 1; border-right: none; }
+    main { padding: 28px; }
+    /* ===== Typography ===== */
+    h2.section {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 1.45rem; font-weight: 700;
+      display: flex; align-items: baseline; gap: 10px;
+      margin: 30px 0 14px;
+    }
+    h2.section::before {
+      counter-increment: sec;
+      content: counter(sec, decimal-leading-zero);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.82rem; color: var(--vermilion); font-weight: 600;
+    }
+    main { counter-reset: sec; }
+    .lede { color: var(--ink-soft); margin-bottom: 20px; max-width: 60ch; }
+    p.kicker {
+      font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--vermilion); font-weight: 600; margin-bottom: 6px;
+    }
+    /* ===== Cards ===== */
+    .sheet-block, .card {
+      background: var(--paper);
+      border: 1.5px solid var(--ink);
+      border-left-width: 8px;
+      padding: 18px 20px;
+      margin-bottom: 18px;
+      position: relative;
+      transition: box-shadow 0.18s ease, transform 0.18s ease;
+    }
+    .card:hover { box-shadow: 4px 4px 0 rgba(34,31,26,0.7); transform: translate(-2px,-2px); }
+    .card .head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .card .head h3 { font-family: 'Fraunces', Georgia, serif; font-size: 1.1rem; }
+    /* ===== Tables ===== */
+    table.spec { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    table.spec th, table.spec td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--rule);
+      vertical-align: top;
+    }
+    table.spec thead th {
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.14em;
+      border-bottom: 2px solid var(--ink); color: var(--ink);
+      font-weight: 600;
+    }
+    table.spec th.rowlabel { color: var(--ink-soft); font-weight: 500; width: 130px; }
+    table.spec tr:last-child td, table.spec tr:last-child th { border-bottom: none; }
+    table.spec tbody tr { transition: background 0.12s ease; }
+    table.spec tbody tr:hover { background: rgba(225,69,44,0.07); }
+    /* ===== Rubber stamp badges ===== */
+    .stamp {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase;
+      display: inline-block;
+      padding: 2px 10px;
+      border: 2px solid;
+      border-radius: 2px;
+      transform: rotate(-2deg);
+    }
+    .stamp.even { color: var(--stamp-green); border-color: var(--stamp-green); }
+    .stamp.odd { color: var(--vermilion); border-color: var(--vermilion); }
+    /* ===== API route chips ===== */
+    .route {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.78rem;
+      background: var(--ink); color: var(--paper);
+      padding: 2px 8px; display: inline-block;
+    }
+    .route.tag { background: var(--teal); }
+    /* ===== Buttons/links ===== */
+    .btn {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.78rem; font-weight: 600;
+      color: var(--ink); text-decoration: none;
+      border: 1.5px solid var(--ink); padding: 9px 16px;
+      transition: all 0.15s ease;
+    }
+    .btn:hover { background: var(--ink); color: var(--paper); }
+    .btn.primary { background: var(--vermilion); border-color: var(--vermilion); color: var(--paper); }
+    .btn.primary:hover { background: var(--ink); border-color: var(--ink); }
+    .link { color: var(--teal); text-decoration: underline; text-underline-offset: 3px; }
+    .link:hover { color: var(--vermilion); }
+    /* ===== Status strip ===== */
+    .status-strip {
+      display: flex; flex-wrap: wrap; gap: 12px;
+      border: 1.5px solid var(--ink); margin-bottom: 18px;
+    }
+    .status-strip .cell {
+      flex: 1 1 200px; padding: 14px 18px;
+      border-right: 1px solid var(--rule-dark);
+    }
+    .status-strip .cell:last-child { border-right: none; }
+    .status-strip .cell .label {
+      font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.16em;
+      color: var(--ink-soft); margin-bottom: 4px;
+    }
+    .status-strip .cell .value { font-family: 'Fraunces', Georgia, serif; font-size: 1.3rem; font-weight: 700; }
+    .ok-flag { color: var(--stamp-green); }
+    /* ===== Error block ===== */
+    .error-block {
+      border: 2px solid var(--vermilion); padding: 18px;
+      background: rgba(225,69,44,0.06);
+      font-size: 0.85rem;
+      display: flex; gap: 12px; align-items: flex-start;
+    }
+    .error-block .crest { font-size: 1.6rem; line-height: 1; }
+    .footer-note { margin-top: 6px; padding: 18px 28px 24px; border-top: 4px double var(--ink); }
+    .footer-note .sig { font-family: 'Fraunces', Georgia, serif; font-style: italic; }
+    a { color: inherit; }
+    @media (max-width: 640px) {
+      .masthead { flex-direction: column; align-items: flex-start; }
+      .ruled-nav a { flex: 1 1 50%; border: none; border-bottom: 1px solid var(--rule-dark); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="masthead">
+      <div class="left">
+        <div class="kicker">FSD · Lab 01 · Syndicate C</div>
+        <h1 class="brand">Users &amp; IDs <em>Ledger</em></h1>
+      </div>
+      <div class="right">
+        <span class="sheet-no">SHEET No. <strong><%= typeof totalUsersCount !== 'undefined' ? totalUsersCount : '—' %></strong></span>
+      </div>
+    </div>
+    <nav class="ruled-nav">
+      <a href="/">Index</a>
+      <a href="/users">All Users</a>
+      <a href="/users/even">Even IDs</a>
+      <a href="/users/odd">Odd IDs</a>
+      <span class="empty"></span>
+    </nav>

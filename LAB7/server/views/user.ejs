@@ -1,0 +1,21 @@
+<%- include('partials/header', { title: title }) %>
+
+  <h1>User Profile</h1>
+  <p class="subtitle">Details for user ID <%= user.id %></p>
+
+  <div class="card">
+    <table>
+      <tr><th width="120">ID</th><td><%= user.id %></td></tr>
+      <tr><th>Name</th><td><%= user.name %></td></tr>
+      <tr><th>Email</th><td><%= user.email %></td></tr>
+      <tr><th>Role</th><td><%= user.role %></td></tr>
+      <tr>
+        <th>Filter</th>
+        <td><span class="badge <%= user.id % 2 === 0 ? 'even' : 'odd' %>"><%= user.id % 2 === 0 ? 'even' : 'odd' %></span></td>
+      </tr>
+    </table>
+  </div>
+
+  <p><a href="/users">&larr; Back to All Users</a></p>
+
+<%- include('partials/footer') %>

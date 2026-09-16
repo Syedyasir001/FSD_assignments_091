@@ -1,0 +1,28 @@
+<%- include('partials/header', { title: title }) %>
+
+  <h1>🚀 User Data API</h1>
+  <p class="subtitle"><%= message %></p>
+
+  <div class="card">
+    <h2>Server Status</h2>
+    <p><span class="green">✔</span> Status: <strong><%= status %></strong></p>
+    <p>Total users in database: <strong><%= totalUsersCount %></strong></p>
+  </div>
+
+  <div class="card">
+    <h2>Available Endpoints</h2>
+    <table>
+      <tr>
+        <th>Route</th>
+        <th>Description</th>
+      </tr>
+      <% for (const endpointKey of Object.keys(endpoints)) { %>
+      <tr>
+        <td><a class="api" href="<%= endpoints[endpointKey].route %>"><%= endpoints[endpointKey].route %></a></td>
+        <td><%= endpoints[endpointKey].description %></td>
+      </tr>
+      <% } %>
+    </table>
+  </div>
+
+<%- include('partials/footer') %>

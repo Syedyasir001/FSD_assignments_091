@@ -1,0 +1,15 @@
+{
+  "name": "express-user-routes-backend",
+  "version": "1.0.0",
+  "description": "Node.js + Express backend providing user data routes with even and odd ID filtering",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "ejs": "^6.0.1",
+    "express": "^4.21.2"
+  }
+}

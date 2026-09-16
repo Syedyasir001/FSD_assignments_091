@@ -1,0 +1,33 @@
+<%- include('partials/header', { title: title }) %>
+
+  <h1><%= heading %></h1>
+  <p class="subtitle">Showing <strong><%= count %></strong> user(s)</p>
+
+  <% if (users.length === 0) { %>
+  <div class="error">No users found.</div>
+  <% } else { %>
+  <div class="card">
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Filter</th>
+      </tr>
+      <% users.forEach(function(user) { %>
+      <tr>
+        <td><%= user.id %></td>
+        <td><%= user.name %></td>
+        <td><%= user.email %></td>
+        <td><%= user.role %></td>
+        <td><span class="badge <%= user.id % 2 === 0 ? 'even' : 'odd' %>"><%= user.id % 2 === 0 ? 'even' : 'odd' %></span></td>
+      </tr>
+      <% }) %>
+    </table>
+  </div>
+  <% } %>
+
+  <p><a href="/">&larr; Back to Home</a></p>
+
+<%- include('partials/footer') %>
