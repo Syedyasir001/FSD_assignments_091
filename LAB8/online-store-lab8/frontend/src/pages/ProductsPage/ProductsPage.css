@@ -1,0 +1,96 @@
+/* ProductsPage.css */
+
+.products-page { background: var(--color-ivory); }
+
+.products-page__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: var(--space-10) 0 var(--space-6);
+}
+
+/* Filters */
+.products-filters {
+  background: #fff;
+  border: 1px solid var(--color-stone-100);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  margin-bottom: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.products-filters__search-row {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.products-filters__search-wrapper {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+}
+
+.products-filters__search-icon {
+  position: absolute;
+  left: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.products-filters__search {
+  padding-left: var(--space-10) !important;
+}
+
+.products-filters__sort {
+  width: 220px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.products-filters__clear {
+  color: var(--color-danger);
+  white-space: nowrap;
+}
+
+/* Category pills */
+.products-filters__categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.category-pill {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  background: var(--color-stone-100);
+  color: var(--color-stone-700);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.category-pill:hover {
+  background: var(--color-stone-200);
+  color: var(--color-teak-dark);
+}
+
+.category-pill--active {
+  background: var(--color-teak-dark);
+  color: var(--color-gold-light);
+  border-color: var(--color-teak-dark);
+}
+
+@media (max-width: 640px) {
+  .products-filters__sort { width: 100%; }
+  .products-filters__search-row { flex-direction: column; align-items: stretch; }
+  .products-filters__search-wrapper { min-width: unset; }
+}

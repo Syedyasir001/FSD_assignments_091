@@ -1,0 +1,225 @@
+/* AccountPage.css */
+
+.account-page {
+  background: var(--color-ivory);
+  padding-top: 0 !important;
+  min-height: 100vh;
+}
+
+.account-page__layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+
+/* Branding Panel */
+.account-page__branding {
+  background: linear-gradient(160deg, var(--color-teak-dark) 0%, #0D0905 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12);
+}
+
+.account-page__branding::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 30% 50%, rgba(232,101,26,0.15) 0%, transparent 60%),
+    radial-gradient(circle at 70% 80%, rgba(201,168,76,0.12) 0%, transparent 60%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23C9A84C' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.account-page__branding-content {
+  position: relative;
+  z-index: 1;
+  max-width: 420px;
+}
+
+.account-page__logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--color-gold-light);
+  text-decoration: none;
+  margin-bottom: var(--space-10);
+}
+
+.account-page__logo span:first-child { font-size: 1.8rem; }
+
+.account-page__branding-title {
+  font-size: clamp(var(--text-3xl), 3vw, var(--text-5xl));
+  color: var(--color-gold-pale);
+  margin-bottom: var(--space-5);
+  line-height: 1.15;
+}
+
+.account-page__branding-accent { color: var(--color-saffron); font-style: italic; }
+
+.account-page__branding-desc {
+  font-size: var(--text-base);
+  color: rgba(245,237,218,0.6);
+  line-height: 1.75;
+  margin-bottom: var(--space-8);
+}
+
+.account-page__branding-stats {
+  display: flex;
+  gap: var(--space-8);
+  margin-bottom: var(--space-8);
+}
+
+.account-page__stat { display: flex; flex-direction: column; }
+.account-page__stat strong {
+  font-size: var(--text-xl);
+  font-weight: 800;
+  color: var(--color-gold-light);
+  font-family: var(--font-heading);
+}
+.account-page__stat span {
+  font-size: var(--text-xs);
+  color: rgba(245,237,218,0.45);
+  margin-top: 2px;
+}
+
+.account-page__branding-icons {
+  display: flex;
+  gap: var(--space-4);
+  font-size: 2rem;
+  opacity: 0.4;
+}
+
+/* Form Panel */
+.account-page__form-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12) var(--space-8);
+  background: var(--color-ivory);
+}
+
+.account-form-card {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.account-form-card__header { margin-bottom: var(--space-2); }
+
+.account-form-card__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--color-teak-dark);
+  line-height: 1.2;
+}
+
+.account-form-card__subtitle {
+  font-size: var(--text-sm);
+  color: var(--color-stone-500);
+  margin-top: var(--space-2);
+}
+
+/* Tabs */
+.account-tabs {
+  display: flex;
+  background: var(--color-stone-100);
+  border-radius: var(--radius-lg);
+  padding: 4px;
+  gap: 4px;
+}
+
+.account-tab {
+  flex: 1;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: var(--color-stone-500);
+  transition: all var(--transition-fast);
+}
+
+.account-tab--active {
+  background: #fff;
+  color: var(--color-teak-dark);
+  box-shadow: var(--shadow-sm);
+}
+
+.account-tab:not(.account-tab--active):hover {
+  color: var(--color-teak);
+}
+
+/* API Error */
+.account-api-error {
+  padding: var(--space-4);
+  background: rgba(214,59,59,0.08);
+  border: 1px solid rgba(214,59,59,0.2);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: var(--color-danger);
+  font-weight: 500;
+}
+
+/* Forms */
+.account-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.account-form__demo-hint {
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-gold-pale);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  color: var(--color-teak);
+}
+
+.account-form__demo-hint code {
+  display: block;
+  margin-top: 2px;
+  font-family: monospace;
+  font-size: var(--text-xs);
+  color: var(--color-teak-dark);
+  font-weight: 700;
+}
+
+.account-form__submit-btn { width: 100%; margin-top: var(--space-2); }
+
+.account-form__switch-text {
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--color-stone-500);
+}
+
+.account-form__switch-link {
+  color: var(--color-saffron);
+  font-weight: 600;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  text-decoration: underline;
+}
+
+.account-form__switch-link:hover { color: var(--color-saffron-dark); }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .account-page__layout { grid-template-columns: 1fr; }
+  .account-page__branding { display: none; }
+  .account-page__form-panel { padding: calc(var(--navbar-height) + var(--space-8)) var(--space-4) var(--space-10); }
+}
