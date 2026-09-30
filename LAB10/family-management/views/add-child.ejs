@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Child</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="glass-header">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center; padding: 0 2rem;">
+      <h2 style="margin: 0; font-size: 1.5rem;">Family Management</h2>
+      <a href="/users/<%= user._id %>" style="color: var(--primary-color); text-decoration: none;">&larr; Back to Profile</a>
+    </div>
+  </div>
+  <div class="container">
+    <header>
+      <h1>Add Child for <%= user.firstName %></h1>
+    </header>
+    
+    <div class="card">
+      <form id="addChildForm">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" id="c-fn" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" id="c-ln" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Age</label>
+          <input type="number" id="c-age" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Email (Optional)</label>
+          <input type="email" id="c-em" class="form-control">
+        </div>
+        <button type="submit" class="btn">Add Child</button>
+      </form>
+    </div>
+  </div>
+  
+  <script>
+    const userId = '<%= user._id %>';
+    document.getElementById('addChildForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fn = document.getElementById('c-fn').value;
+      const ln = document.getElementById('c-ln').value;
+      const age = document.getElementById('c-age').value;
+      const em = document.getElementById('c-em').value;
+      
+      const res = await fetch(`/users/${userId}/children`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstName: fn, lastName: ln, age: age, email: em })
+      });
+      const data = await res.json();
+      if(res.ok) {
+        alert(data.message);
+        window.location.href = `/users/${userId}`;
+      } else {
+        alert(data.error);
+      }
+    });
+  </script>
+</body>
+</html>
