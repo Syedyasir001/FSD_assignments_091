@@ -1,6 +1,6 @@
 module.exports = {
   purge: ['./src/*{.js}', './public/index.html'],
-  darkMode: false, // or 'media' or 'class'
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -18,9 +18,25 @@ module.exports = {
           DEFAULT: '#D7DADC',
           darker: '#818384',
         },
+        // Light mode equivalents
+        reddit_light: {
+          DEFAULT: '#DAE0E6',
+          brighter: '#F6F7F8',
+          brightest: '#FFFFFF',
+        },
+        reddit_light_border: {
+          DEFAULT: '#EDEFF1',
+        },
+        reddit_light_text: {
+          DEFAULT: '#1C1C1C',
+          darker: '#5F6368',
+        },
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+      },
+      boxShadow: {
+        'sidebar': '2px 0 8px rgba(0,0,0,0.15)',
       },
     },
   },

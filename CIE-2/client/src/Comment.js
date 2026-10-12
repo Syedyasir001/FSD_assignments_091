@@ -6,7 +6,6 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 
 function Comment(props) {
-
   const [comment,setComment] = useState({});
   const [comments,setComments] = useState([]);
   const [commentsTotals, setCommentsTotals] = useState(null);
@@ -20,7 +19,8 @@ function Comment(props) {
   }
 
   function refreshVotes() {
-    const commentsIds = [comment._id, ...comments.map(c => c._id) ];
+    const commentsIds = [comment._id, ...comments.map(c => c._id) ].filter(id => id);
+    if (commentsIds.length === 0) return;
     axios.post('http://localhost:4000/votes', {commentsIds}, {withCredentials:true})
       .then(response => {
         setCommentsTotals(response.data.commentsTotals);
@@ -41,29 +41,28 @@ function Comment(props) {
   }, [props.id, props.comment]);
 
   useEffect(() => {
-    refreshVotes();
-  }, [comments.length]);
+    if (comment._id) {
+      refreshVotes();
+    }
+  }, [comments.length, comment._id]);
 
   return (
-    <>
+    <RootCommentContext.Provider value={{refreshComments,refreshVotes,commentsTotals,userVotes}}>
       {comment && (
         <Post {...comment} open={true} />
       )}
       {!!comment && !!comment._id && (
-        <div className="px-6">
-          <hr className="border-reddit_border my-6 opacity-50"/>
+        <div className="pt-6 pb-12 px-4 sm:px-6">
           <CommentForm onSubmit={() => refreshComments()}
                        rootId={comment._id} parentId={comment._id} showAuthor={true} />
           <hr className="border-reddit_border my-6 opacity-50"/>
-          <RootCommentContext.Provider value={{refreshComments,refreshVotes,commentsTotals,userVotes}}>
-            <Comments
-              parentId={comment._id}
-              rootId={comment._id}
-              comments={comments} />
-          </RootCommentContext.Provider>
+          <Comments
+            parentId={comment._id}
+            rootId={comment._id}
+            comments={comments} />
         </div>
       )}
-    </>
+    </RootCommentContext.Provider>
   );
 }
 

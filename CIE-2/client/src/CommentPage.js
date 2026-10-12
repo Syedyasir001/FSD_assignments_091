@@ -1,15 +1,21 @@
 import Comment from "./Comment";
+import {useContext} from "react";
+import ThemeContext from "./ThemeContext";
 
 function CommentPage(props) {
-
   const commentId = props.match.params.id;
+  const {theme} = useContext(ThemeContext);
+  const isDark = theme === 'dark';
+
+  const bgClass = isDark ? "bg-reddit_dark" : "bg-reddit_light";
 
   return (
-    <div className="py-8 px-6 bg-reddit_dark min-h-screen">
-      <div className="bg-reddit_dark-brighter p-6 rounded-2xl max-w-5xl mx-auto shadow-lg border border-reddit_border">
+    <div className={`min-h-screen transition-colors duration-300 ${bgClass}`}>
+      <div className="w-full">
         <Comment id={commentId} />
       </div>
     </div>
   );
 }
+
 export default CommentPage;

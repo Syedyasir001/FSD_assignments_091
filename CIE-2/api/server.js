@@ -21,10 +21,7 @@ app.use(cors({
 
 app.use(VotingRoutes);
 
-function getUserFromToken(token) {
-  const userInfo = jwt.verify(token, secret);
-  return User.findById(userInfo.id);
-}
+import {getUserFromToken} from "./UserFunctions.js";
 
 await mongoose.connect('mongodb://127.0.0.1:27017/reddit', {useNewUrlParser:true,useUnifiedTopology:true,});
 const db = mongoose.connection;
