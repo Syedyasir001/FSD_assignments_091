@@ -1,0 +1,158 @@
+<%- include('partials/header', { pageTitle: 'Home' }) %>
+
+<section class="hero">
+  <h1>Lost something on campus?<br>Or found someone's belonging?</h1>
+  <p>The centralized, secure platform for college students to report lost items, register found belongings, verify ownership, and claim possessions hassle-free.</p>
+  <div class="hero-actions">
+    <a href="/report-lost" class="btn btn-secondary btn-lg" style="background: white; color: var(--primary);">Report a Lost Item</a>
+    <a href="/report-found" class="btn btn-primary btn-lg" style="border: 1px solid rgba(255,255,255,0.4);">Report a Found Item</a>
+    <a href="/register-student" class="btn btn-secondary btn-lg" style="background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.25);">Register Student Profile</a>
+  </div>
+</section>
+
+<!-- Stats Grid -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon lost">&#128269;</div>
+    <div class="stat-info">
+      <div class="stat-value"><%= stats.totalLost %></div>
+      <div class="stat-label">Lost Items Reported</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon found">&#127873;</div>
+    <div class="stat-info">
+      <div class="stat-value"><%= stats.totalFound %></div>
+      <div class="stat-label">Found Items Listed</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon returned">&#10004;</div>
+    <div class="stat-info">
+      <div class="stat-value"><%= stats.totalReturned %></div>
+      <div class="stat-label">Items Returned to Owners</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon students">&#127891;</div>
+    <div class="stat-info">
+      <div class="stat-value"><%= stats.totalStudents %></div>
+      <div class="stat-label">Registered Students</div>
+    </div>
+  </div>
+</div>
+
+<!-- Section: Recent Lost Items -->
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">Recently Reported Lost Items</h2>
+    <a href="/lost-items" class="btn btn-secondary btn-sm">View All Lost Items &rarr;</a>
+  </div>
+
+  <% if (recentLost && recentLost.length > 0) { %>
+    <div class="items-grid">
+      <% recentLost.forEach(item => { %>
+        <div class="item-card">
+          <div>
+            <div class="item-card-header">
+              <span class="badge badge-category"><%= item.category %></span>
+              <span class="badge badge-lost"><%= item.status %></span>
+            </div>
+            <h3 class="item-card-title"><%= item.itemName %></h3>
+            <p class="item-card-desc"><%= item.description %></p>
+          </div>
+
+          <div>
+            <div class="item-meta">
+              <div class="meta-row">
+                <span>&#128205;</span>
+                <span><strong>Last seen:</strong> <%= item.lastSeenLocation %></span>
+              </div>
+              <div class="meta-row">
+                <span>&#128197;</span>
+                <span><%= new Date(item.dateLost).toLocaleDateString() %></span>
+              </div>
+              <% if (item.reportedBy) { %>
+                <div class="meta-row">
+                  <span>&#128100;</span>
+                  <span>Reported by: <a href="/students/<%= item.reportedBy._id %>"><%= item.reportedBy.fullName %></a></span>
+                </div>
+              <% } %>
+            </div>
+
+            <a href="/lost-items/<%= item._id %>" class="btn btn-secondary btn-sm" style="width: 100%;">View Full Details</a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <div class="empty-state">
+      <div class="empty-icon">&#128064;</div>
+      <h3 class="empty-title">No lost items reported yet</h3>
+      <p class="empty-desc">Great news! No belongings have been reported missing recently.</p>
+      <a href="/report-lost" class="btn btn-primary">+ Report a Lost Item</a>
+    </div>
+  <% } %>
+</div>
+
+<!-- Section: Recent Found Items -->
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">Recently Reported Found Items</h2>
+    <a href="/found-items" class="btn btn-secondary btn-sm">View All Found Items &rarr;</a>
+  </div>
+
+  <% if (recentFound && recentFound.length > 0) { %>
+    <div class="items-grid">
+      <% recentFound.forEach(item => { %>
+        <div class="item-card">
+          <div>
+            <div class="item-card-header">
+              <span class="badge badge-category"><%= item.category %></span>
+              <span class="badge <%= item.status === 'Returned' ? 'badge-returned' : 'badge-found' %>">
+                <%= item.status %>
+              </span>
+            </div>
+            <h3 class="item-card-title"><%= item.itemName %></h3>
+            <p class="item-card-desc"><%= item.description %></p>
+          </div>
+
+          <div>
+            <div class="item-meta">
+              <div class="meta-row">
+                <span>&#128205;</span>
+                <span><strong>Found at:</strong> <%= item.foundLocation %></span>
+              </div>
+              <div class="meta-row">
+                <span>&#128197;</span>
+                <span><%= new Date(item.dateFound).toLocaleDateString() %></span>
+              </div>
+              <% if (item.reportedBy) { %>
+                <div class="meta-row">
+                  <span>&#128100;</span>
+                  <span>Found by: <a href="/students/<%= item.reportedBy._id %>"><%= item.reportedBy.fullName %></a></span>
+                </div>
+              <% } %>
+            </div>
+
+            <a href="/found-items/<%= item._id %>" class="btn btn-primary btn-sm" style="width: 100%;">
+              <%= item.status === 'Returned' ? 'View Details (Returned)' : 'View Item & Claim' %>
+            </a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <div class="empty-state">
+      <div class="empty-icon">&#128230;</div>
+      <h3 class="empty-title">No found items reported yet</h3>
+      <p class="empty-desc">No unclaimed items have been reported in the system.</p>
+      <a href="/report-found" class="btn btn-primary">+ Report a Found Item</a>
+    </div>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,101 @@
+<%- include('partials/header', { pageTitle: 'Report a Found Item' }) %>
+
+<div style="max-width: 650px; margin: 0 auto;">
+  <div style="margin-bottom: 1.5rem;">
+    <a href="/found-items" class="btn btn-secondary btn-sm">&larr; Back to Found Items</a>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h1 class="card-title" style="font-size: 1.5rem;">Report a Found Item</h1>
+    </div>
+
+    <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+      Thank you for helping keep the campus community honest! Post details of the item you discovered so its rightful owner can claim it.
+    </p>
+
+    <form action="/found-items" method="POST">
+      <div class="form-group">
+        <label for="reportedBy" class="form-label">Finder's Student Profile *</label>
+        <select name="reportedBy" id="reportedBy" class="form-select" required>
+          <option value="">-- Select Your Student Profile --</option>
+          <% if (students && students.length > 0) { %>
+            <% students.forEach(stu => { %>
+              <option value="<%= stu._id %>"><%= stu.fullName %> (<%= stu.department %> - <%= stu.email %>)</option>
+            <% }) %>
+          <% } %>
+        </select>
+        <div class="form-help">
+          Not registered yet? <a href="/register-student" target="_blank">Register student profile</a> first.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="itemName" class="form-label">Item Name *</label>
+        <input
+          type="text"
+          id="itemName"
+          name="itemName"
+          class="form-control"
+          placeholder="e.g. Stainless Steel Hydro Flask Water Bottle"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="category" class="form-label">Category *</label>
+        <select name="category" id="category" class="form-select" required>
+          <option value="">-- Choose Category --</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Documents & IDs">Documents & IDs</option>
+          <option value="Accessories">Accessories</option>
+          <option value="Books & Stationery">Books & Stationery</option>
+          <option value="Clothing">Clothing</option>
+          <option value="Keys">Keys</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="foundLocation" class="form-label">Location Where Found *</label>
+        <input
+          type="text"
+          id="foundLocation"
+          name="foundLocation"
+          class="form-control"
+          placeholder="e.g. Cafeteria Table near North Exit"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="dateFound" class="form-label">Date Discovered *</label>
+        <input
+          type="date"
+          id="dateFound"
+          name="dateFound"
+          class="form-control"
+          value="<%= new Date().toISOString().split('T')[0] %>"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="description" class="form-label">Description (Keep some identifying details private) *</label>
+        <textarea
+          id="description"
+          name="description"
+          class="form-textarea"
+          placeholder="Provide a general description. You may withhold some specific details (e.g. keychains, wallpaper) to verify genuine ownership claims."
+          required
+        ></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 1rem;">
+        Publish Found Item Report
+      </button>
+    </form>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,161 @@
+<%- include('partials/header', { pageTitle: student.fullName + ' - Student Profile' }) %>
+
+<div style="margin-bottom: 1.5rem;">
+  <a href="/students" class="btn btn-secondary btn-sm">&larr; Back to Students Directory</a>
+</div>
+
+<div class="card" style="margin-bottom: 2rem; background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);">
+  <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+    <div class="profile-avatar" style="width: 80px; height: 80px; font-size: 2.2rem; margin-bottom: 0;">
+      <%= student.fullName.charAt(0).toUpperCase() %>
+    </div>
+    
+    <div style="flex: 1; min-width: 250px;">
+      <h1 style="font-size: 2rem; margin-bottom: 0.25rem;"><%= student.fullName %></h1>
+      <p style="font-size: 1.05rem; color: var(--primary); font-weight: 600; margin-bottom: 0.5rem;">
+        <%= student.department %>
+      </p>
+      <p style="font-size: 0.85rem; color: var(--text-light);">
+        Unique MongoDB Identifier: <code style="background: var(--bg-subtle); padding: 0.2rem 0.5rem; border-radius: var(--radius-sm);"><%= student._id %></code>
+      </p>
+    </div>
+
+    <div style="background: var(--bg-surface); border: 1px solid var(--border); padding: 1rem 1.25rem; border-radius: var(--radius-md); font-size: 0.9rem;">
+      <div style="margin-bottom: 0.5rem;">
+        <span style="color: var(--text-muted); font-size: 0.8rem; font-weight: 600; display: block;">COLLEGE EMAIL</span>
+        <a href="mailto:<%= student.email %>"><strong><%= student.email %></strong></a>
+      </div>
+      <div>
+        <span style="color: var(--text-muted); font-size: 0.8rem; font-weight: 600; display: block;">PHONE / WHATSAPP</span>
+        <span><%= student.contactNumber %></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tabs/Sections for Items & Claims -->
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">Lost Items Reported by <%= student.fullName %> (<%= lostItems.length %>)</h2>
+    <a href="/report-lost" class="btn btn-secondary btn-sm">+ Report Another</a>
+  </div>
+
+  <% if (lostItems && lostItems.length > 0) { %>
+    <div class="items-grid">
+      <% lostItems.forEach(item => { %>
+        <div class="item-card">
+          <div>
+            <div class="item-card-header">
+              <span class="badge badge-category"><%= item.category %></span>
+              <span class="badge badge-lost"><%= item.status %></span>
+            </div>
+            <h3 class="item-card-title"><%= item.itemName %></h3>
+            <p class="item-card-desc"><%= item.description %></p>
+          </div>
+          <div>
+            <div class="item-meta">
+              <div class="meta-row">
+                <span>&#128205;</span>
+                <span>Last seen: <%= item.lastSeenLocation %></span>
+              </div>
+              <div class="meta-row">
+                <span>&#128197;</span>
+                <span><%= new Date(item.dateLost).toLocaleDateString() %></span>
+              </div>
+            </div>
+            <a href="/lost-items/<%= item._id %>" class="btn btn-secondary btn-sm" style="width: 100%;">View Details</a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <p style="color: var(--text-muted); font-size: 0.925rem; padding: 1rem 0;">No lost items reported by this student.</p>
+  <% } %>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">Found Items Reported by <%= student.fullName %> (<%= foundItems.length %>)</h2>
+    <a href="/report-found" class="btn btn-primary btn-sm">+ Report Found</a>
+  </div>
+
+  <% if (foundItems && foundItems.length > 0) { %>
+    <div class="items-grid">
+      <% foundItems.forEach(item => { %>
+        <div class="item-card">
+          <div>
+            <div class="item-card-header">
+              <span class="badge badge-category"><%= item.category %></span>
+              <span class="badge <%= item.status === 'Returned' ? 'badge-returned' : 'badge-found' %>">
+                <%= item.status %>
+              </span>
+            </div>
+            <h3 class="item-card-title"><%= item.itemName %></h3>
+            <p class="item-card-desc"><%= item.description %></p>
+          </div>
+          <div>
+            <div class="item-meta">
+              <div class="meta-row">
+                <span>&#128205;</span>
+                <span>Found at: <%= item.foundLocation %></span>
+              </div>
+              <div class="meta-row">
+                <span>&#128197;</span>
+                <span><%= new Date(item.dateFound).toLocaleDateString() %></span>
+              </div>
+            </div>
+            <a href="/found-items/<%= item._id %>" class="btn btn-secondary btn-sm" style="width: 100%;">View &amp; Review Claims</a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <p style="color: var(--text-muted); font-size: 0.925rem; padding: 1rem 0;">No found items reported by this student.</p>
+  <% } %>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">Claims Submitted by <%= student.fullName %> (<%= claimsMade.length %>)</h2>
+  </div>
+
+  <% if (claimsMade && claimsMade.length > 0) { %>
+    <% claimsMade.forEach(claim => { %>
+      <div class="claim-card">
+        <div class="claim-header">
+          <div>
+            <% if (claim.foundItemId) { %>
+              <strong style="font-size: 1.05rem;">
+                <a href="/found-items/<%= claim.foundItemId._id %>"><%= claim.foundItemId.itemName %></a>
+              </strong>
+              <span class="badge badge-category" style="margin-left: 0.5rem;"><%= claim.foundItemId.category %></span>
+            <% } else { %>
+              <em>Archived Found Item</em>
+            <% } %>
+            <div style="font-size: 0.775rem; color: var(--text-light); margin-top: 0.2rem;">
+              Claim submitted on <%= new Date(claim.createdAt).toLocaleDateString() %>
+            </div>
+          </div>
+
+          <div>
+            <% if (claim.status === 'Pending') { %>
+              <span class="badge badge-pending">&#9203; Pending</span>
+            <% } else if (claim.status === 'Approved') { %>
+              <span class="badge badge-approved">&#10004; Approved</span>
+            <% } else { %>
+              <span class="badge badge-rejected">&#10008; Rejected</span>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="claim-reason">
+          <strong>Submitted Reason:</strong> <%= claim.reason %>
+        </div>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <p style="color: var(--text-muted); font-size: 0.925rem; padding: 1rem 0;">This student has not submitted any item claims yet.</p>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,75 @@
+<%- include('partials/header', { pageTitle: 'Register Student Profile' }) %>
+
+<div style="max-width: 600px; margin: 0 auto;">
+  <div style="margin-bottom: 1.5rem;">
+    <a href="/students" class="btn btn-secondary btn-sm">&larr; Back to Directory</a>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h1 class="card-title" style="font-size: 1.5rem;">Register Student Profile</h1>
+    </div>
+
+    <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+      Each student receives a unique system ID to report items, file claims, and verify returns.
+    </p>
+
+    <form action="/students" method="POST">
+      <div class="form-group">
+        <label for="fullName" class="form-label">Full Name *</label>
+        <input
+          type="text"
+          id="fullName"
+          name="fullName"
+          class="form-control"
+          placeholder="e.g. Alex Johnson"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="email" class="form-label">College Email Address *</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          placeholder="e.g. alex.j@college.edu"
+          required
+        >
+        <div class="form-help">Must be a unique, valid college email address.</div>
+      </div>
+
+      <div class="form-group">
+        <label for="department" class="form-label">Academic Department *</label>
+        <input
+          type="text"
+          id="department"
+          name="department"
+          class="form-control"
+          placeholder="e.g. Computer Science & Engineering"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="contactNumber" class="form-label">Contact / Phone Number *</label>
+        <input
+          type="tel"
+          id="contactNumber"
+          name="contactNumber"
+          class="form-control"
+          placeholder="e.g. +1 555-0199"
+          required
+        >
+        <div class="form-help">Used to communicate when recovering or verifying items.</div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 1rem;">
+        Create Student Profile
+      </button>
+    </form>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

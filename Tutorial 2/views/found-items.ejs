@@ -1,0 +1,109 @@
+<%- include('partials/header', { pageTitle: 'Found Items' }) %>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+  <div>
+    <h1 style="font-size: 2rem;">Found Belongings on Campus</h1>
+    <p style="color: var(--text-muted);">Browse items that have been found and are waiting to be claimed by their owners</p>
+  </div>
+  <a href="/report-found" class="btn btn-primary">+ Report a Found Item</a>
+</div>
+
+<!-- Search & Filter Controls -->
+<div class="filter-bar">
+  <form action="/found-items" method="GET" class="filter-form">
+    <div class="search-input-group">
+      <input
+        type="text"
+        name="search"
+        class="form-control"
+        placeholder="Search found items, location, or description..."
+        value="<%= searchQuery %>"
+      >
+    </div>
+
+    <div style="min-width: 170px;">
+      <select name="category" class="form-select">
+        <option value="">All Categories</option>
+        <% const categories = ['Electronics', 'Documents & IDs', 'Accessories', 'Books & Stationery', 'Clothing', 'Keys', 'Other']; %>
+        <% categories.forEach(cat => { %>
+          <option value="<%= cat %>" <%= categoryFilter === cat ? 'selected' : '' %>><%= cat %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div style="min-width: 140px;">
+      <select name="status" class="form-select">
+        <option value="">All Statuses</option>
+        <option value="Found" <%= statusFilter === 'Found' ? 'selected' : '' %>>Found (Open to Claim)</option>
+        <option value="Returned" <%= statusFilter === 'Returned' ? 'selected' : '' %>>Returned</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-secondary">Filter</button>
+    <% if (searchQuery || categoryFilter || statusFilter) { %>
+      <a href="/found-items" class="btn btn-secondary" style="color: var(--danger);">Reset</a>
+    <% } %>
+  </form>
+</div>
+
+<!-- Dynamic Found Items Grid -->
+<% if (foundItems && foundItems.length > 0) { %>
+  <div class="items-grid">
+    <% foundItems.forEach(item => { %>
+      <div class="item-card">
+        <div>
+          <div class="item-card-header">
+            <span class="badge badge-category"><%= item.category %></span>
+            <span class="badge <%= item.status === 'Returned' ? 'badge-returned' : 'badge-found' %>">
+              <%= item.status %>
+            </span>
+          </div>
+          <h3 class="item-card-title"><%= item.itemName %></h3>
+          <p class="item-card-desc"><%= item.description %></p>
+        </div>
+
+        <div>
+          <div class="item-meta">
+            <div class="meta-row">
+              <span>&#128205;</span>
+              <span><strong>Found at:</strong> <%= item.foundLocation %></span>
+            </div>
+            <div class="meta-row">
+              <span>&#128197;</span>
+              <span><strong>Date found:</strong> <%= new Date(item.dateFound).toLocaleDateString() %></span>
+            </div>
+            <% if (item.reportedBy) { %>
+              <div class="meta-row">
+                <span>&#128100;</span>
+                <span>Found by: <a href="/students/<%= item.reportedBy._id %>"><%= item.reportedBy.fullName %></a></span>
+              </div>
+            <% } %>
+          </div>
+
+          <a href="/found-items/<%= item._id %>" class="btn <%= item.status === 'Returned' ? 'btn-secondary' : 'btn-primary' %> btn-sm" style="width: 100%;">
+            <%= item.status === 'Returned' ? 'View Details (Returned)' : 'View Item & Claim \u2192' %>
+          </a>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+<% } else { %>
+  <div class="empty-state">
+    <div class="empty-icon">&#128230;</div>
+    <h3 class="empty-title">No found items have been reported yet</h3>
+    <p class="empty-desc">
+      <% if (searchQuery || categoryFilter || statusFilter) { %>
+        No items matched your current filter criteria. Try clearing the search or category filters.
+      <% } else { %>
+        There are currently no active found items in the system. If you came across someone's belongings, please report it!
+      <% } %>
+    </p>
+    <% if (searchQuery || categoryFilter || statusFilter) { %>
+      <a href="/found-items" class="btn btn-secondary">Clear Filters</a>
+    <% } else { %>
+      <a href="/report-found" class="btn btn-primary">+ Report a Found Item</a>
+    <% } %>
+  </div>
+<% } %>
+
+<%- include('partials/footer') %>

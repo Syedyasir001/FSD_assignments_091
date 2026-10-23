@@ -1,0 +1,57 @@
+<%- include('partials/header', { pageTitle: 'Students Directory' }) %>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+  <div>
+    <h1 style="font-size: 2rem;">Registered Student Profiles</h1>
+    <p style="color: var(--text-muted);">View profiles, contact information, and reporting records for campus students</p>
+  </div>
+  <a href="/register-student" class="btn btn-primary">+ Register New Student</a>
+</div>
+
+<% if (students && students.length > 0) { %>
+  <div class="items-grid">
+    <% students.forEach(stu => { %>
+      <div class="item-card">
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+          <div class="profile-avatar" style="width: 52px; height: 52px; font-size: 1.3rem; margin-bottom: 0;">
+            <%= stu.fullName.charAt(0).toUpperCase() %>
+          </div>
+          <div>
+            <h3 style="font-size: 1.15rem; margin-bottom: 0.15rem;"><%= stu.fullName %></h3>
+            <span style="font-size: 0.85rem; color: var(--primary); font-weight: 600;"><%= stu.department %></span>
+          </div>
+        </div>
+
+        <div>
+          <div class="item-meta">
+            <div class="meta-row">
+              <span>&#9993;</span>
+              <span><%= stu.email %></span>
+            </div>
+            <div class="meta-row">
+              <span>&#128222;</span>
+              <span><%= stu.contactNumber %></span>
+            </div>
+            <div class="meta-row">
+              <span>&#127380;</span>
+              <span style="font-size: 0.75rem; font-family: monospace;"><%= stu._id %></span>
+            </div>
+          </div>
+
+          <a href="/students/<%= stu._id %>" class="btn btn-secondary btn-sm" style="width: 100%;">
+            View Complete Profile &rarr;
+          </a>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+<% } else { %>
+  <div class="empty-state">
+    <div class="empty-icon">&#127891;</div>
+    <h3 class="empty-title">No student profiles registered</h3>
+    <p class="empty-desc">Create the first student profile to start reporting lost and found items on campus.</p>
+    <a href="/register-student" class="btn btn-primary">+ Register Student</a>
+  </div>
+<% } %>
+
+<%- include('partials/footer') %>

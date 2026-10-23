@@ -1,0 +1,220 @@
+<%- include('partials/header', { pageTitle: item.itemName + ' (Found Item)' }) %>
+
+<div style="margin-bottom: 1.5rem;">
+  <a href="/found-items" class="btn btn-secondary btn-sm">&larr; Back to Found Items</a>
+</div>
+
+<div class="detail-layout">
+  <!-- Left Column: Item Details & Claims -->
+  <div>
+    <!-- Item Details Card -->
+    <div class="card">
+      <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
+        <span class="badge badge-category"><%= item.category %></span>
+        <span class="badge <%= item.status === 'Returned' ? 'badge-returned' : 'badge-found' %>">
+          <%= item.status %>
+        </span>
+      </div>
+
+      <h1 class="detail-title"><%= item.itemName %></h1>
+      <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 1.5rem;">
+        Database Record ID: <code><%= item._id %></code>
+      </p>
+
+      <div class="detail-section">
+        <h3 class="detail-section-title">Item Description</h3>
+        <p style="white-space: pre-line; color: var(--text-main); font-size: 1.05rem;"><%= item.description %></p>
+      </div>
+
+      <div class="detail-section">
+        <h3 class="detail-section-title">Found Location &amp; Time</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+          <div style="background: var(--bg-subtle); padding: 1rem; border-radius: var(--radius-md);">
+            <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">FOUND AT LOCATION</div>
+            <div style="font-size: 1.05rem; font-weight: 700; margin-top: 0.25rem;">&#128205; <%= item.foundLocation %></div>
+          </div>
+
+          <div style="background: var(--bg-subtle); padding: 1rem; border-radius: var(--radius-md);">
+            <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">DATE DISCOVERED</div>
+            <div style="font-size: 1.05rem; font-weight: 700; margin-top: 0.25rem;">&#128197; <%= new Date(item.dateFound).toLocaleDateString() %></div>
+          </div>
+
+          <div style="background: var(--bg-subtle); padding: 1rem; border-radius: var(--radius-md);">
+            <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">REPORTED ON</div>
+            <div style="font-size: 1.05rem; font-weight: 700; margin-top: 0.25rem;">&#9201; <%= new Date(item.createdAt).toLocaleString() %></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: Existing Claims -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Claims on this Item (<%= claims ? claims.length : 0 %>)</h2>
+      </div>
+
+      <% if (claims && claims.length > 0) { %>
+        <% claims.forEach(claim => { %>
+          <div class="claim-card">
+            <div class="claim-header">
+              <div>
+                <% if (claim.claimedBy) { %>
+                  <strong><a href="/students/<%= claim.claimedBy._id %>"><%= claim.claimedBy.fullName %></a></strong>
+                  <span style="font-size: 0.825rem; color: var(--text-muted);">
+                    (<%= claim.claimedBy.department %> &bull; <%= claim.claimedBy.email %>)
+                  </span>
+                <% } else { %>
+                  <em>Unknown Claimant</em>
+                <% } %>
+                <div style="font-size: 0.775rem; color: var(--text-light); margin-top: 0.2rem;">
+                  Submitted on <%= new Date(claim.createdAt).toLocaleString() %>
+                </div>
+              </div>
+
+              <div>
+                <% if (claim.status === 'Pending') { %>
+                  <span class="badge badge-pending">&#9203; Pending Review</span>
+                <% } else if (claim.status === 'Approved') { %>
+                  <span class="badge badge-approved">&#10004; Approved</span>
+                <% } else { %>
+                  <span class="badge badge-rejected">&#10008; Rejected</span>
+                <% } %>
+              </div>
+            </div>
+
+            <div class="claim-reason">
+              <strong style="font-size: 0.825rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">REASON / PROOF OF OWNERSHIP:</strong>
+              <%= claim.reason %>
+            </div>
+
+            <!-- Review Actions (Available when claim is Pending and item is not Returned, or for verification) -->
+            <% if (claim.status === 'Pending' && item.status !== 'Returned') { %>
+              <div class="claim-actions">
+                <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Finder Review Controls:</span>
+                
+                <!-- Approve Claim Form (method-override PATCH) -->
+                <form action="/claims/<%= claim._id %>/status?_method=PATCH" method="POST" style="display: inline-flex; align-items: center; gap: 0.4rem;">
+                  <input type="hidden" name="status" value="Approved">
+                  <input type="hidden" name="reviewerStudentId" value="<%= item.reportedBy ? item.reportedBy._id : '' %>">
+                  <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Approve this claim? This will mark the item as RETURNED to this student.');">
+                    &#10004; Approve Claim
+                  </button>
+                </form>
+
+                <!-- Reject Claim Form (method-override PATCH) -->
+                <form action="/claims/<%= claim._id %>/status?_method=PATCH" method="POST" style="display: inline-flex; align-items: center; gap: 0.4rem;">
+                  <input type="hidden" name="status" value="Rejected">
+                  <input type="hidden" name="reviewerStudentId" value="<%= item.reportedBy ? item.reportedBy._id : '' %>">
+                  <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Reject this claim?');">
+                    &#10008; Reject Claim
+                  </button>
+                </form>
+              </div>
+            <% } %>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <div class="empty-state" style="padding: 2.5rem 1rem;">
+          <div class="empty-icon" style="font-size: 2.5rem;">&#128172;</div>
+          <h4 class="empty-title" style="font-size: 1.15rem;">No claims submitted yet</h4>
+          <p class="empty-desc" style="font-size: 0.875rem;">If this item belongs to you, submit your claim with proof of ownership using the form.</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Right Column: Reporter Info & Claim Submission Form -->
+  <div>
+    <!-- Reporter Profile Card -->
+    <div class="card">
+      <h3 class="card-title" style="margin-bottom: 1rem;">Found &amp; Reported By</h3>
+
+      <% if (item.reportedBy) { %>
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem;">
+          <div class="profile-avatar" style="width: 52px; height: 52px; font-size: 1.3rem; margin-bottom: 0;">
+            <%= item.reportedBy.fullName.charAt(0).toUpperCase() %>
+          </div>
+          <div>
+            <h4 style="font-size: 1.1rem; margin-bottom: 0.15rem;"><%= item.reportedBy.fullName %></h4>
+            <span style="font-size: 0.825rem; color: var(--text-muted);"><%= item.reportedBy.department %></span>
+          </div>
+        </div>
+
+        <div style="font-size: 0.9rem; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.5rem;">
+          <div>
+            <strong>Email:</strong><br>
+            <a href="mailto:<%= item.reportedBy.email %>"><%= item.reportedBy.email %></a>
+          </div>
+          <div>
+            <strong>Contact:</strong><br>
+            <span><%= item.reportedBy.contactNumber %></span>
+          </div>
+        </div>
+
+        <a href="/students/<%= item.reportedBy._id %>" class="btn btn-secondary btn-sm" style="width: 100%;">
+          View Finder's Profile &rarr;
+        </a>
+      <% } else { %>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Reporting student record not found.</p>
+      <% } %>
+    </div>
+
+    <!-- Claim Submission Box -->
+    <div class="card" style="border-top: 4px solid var(--primary);">
+      <h3 class="card-title" style="margin-bottom: 0.75rem;">Claim This Item</h3>
+
+      <% if (item.status === 'Returned') { %>
+        <div class="alert alert-success" style="display: block; text-align: center; margin-bottom: 0;">
+          <h4 style="font-size: 1rem; margin-bottom: 0.25rem;">&#10004; Item Returned</h4>
+          <p style="font-size: 0.85rem; margin: 0;">
+            This item has been officially returned to its verified owner. New claims are closed.
+          </p>
+        </div>
+      <% } else { %>
+        <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+          Is this yours? Explain identifying details (markings, stickers, serial code, exact contents) so the finder can verify your ownership.
+        </p>
+
+        <form action="/found-items/<%= item._id %>/claims" method="POST">
+          <div class="form-group">
+            <label for="claimedBy" class="form-label">I Am Claiming As:</label>
+            <select name="claimedBy" id="claimedBy" class="form-select" required>
+              <option value="">-- Select Your Student Profile --</option>
+              <% if (allStudents && allStudents.length > 0) { %>
+                <% allStudents.forEach(stu => { %>
+                  <% // Do not let the reporter claim their own found item %>
+                  <% if (item.reportedBy && item.reportedBy._id.toString() !== stu._id.toString()) { %>
+                    <option value="<%= stu._id %>">
+                      <%= stu.fullName %> (<%= stu.department %> - <%= stu.email %>)
+                    </option>
+                  <% } %>
+                <% }) %>
+              <% } %>
+            </select>
+            <div class="form-help">
+              Don't see your name? <a href="/register-student" target="_blank">Register student profile here</a>.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="reason" class="form-label">Proof / Identifying Reason:</label>
+            <textarea
+              name="reason"
+              id="reason"
+              class="form-textarea"
+              placeholder="e.g. My initials 'JK' are written in blue ink inside the cover, or wallpaper is a sunset photo."
+              required
+            ></textarea>
+            <div class="form-help">Detailed explanations ensure faster verification.</div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%;">
+            Submit Ownership Claim
+          </button>
+        </form>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

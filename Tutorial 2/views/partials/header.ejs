@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof pageTitle !== 'undefined' ? pageTitle + ' | ' : '' %>Campus Lost & Found Management System</title>
+  <meta name="description" content="College Lost and Found Portal - Report lost possessions, register found items, and manage recovery claims securely.">
+  <link rel="stylesheet" href="/styles.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="/" class="nav-brand">
+        <div class="brand-icon">LF</div>
+        <span>Campus Lost &amp; Found</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="/" class="nav-link <%= currentPath === '/' ? 'active' : '' %>">Home</a></li>
+          <li><a href="/lost-items" class="nav-link <%= currentPath.startsWith('/lost-items') ? 'active' : '' %>">Lost Items</a></li>
+          <li><a href="/found-items" class="nav-link <%= currentPath.startsWith('/found-items') ? 'active' : '' %>">Found Items</a></li>
+          <li><a href="/students" class="nav-link <%= currentPath.startsWith('/students') ? 'active' : '' %>">Students</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-cta">
+        <a href="/report-lost" class="btn btn-secondary btn-sm">+ Report Lost</a>
+        <a href="/report-found" class="btn btn-primary btn-sm">+ Report Found</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Alerts Section -->
+  <div class="container" style="margin-top: 1.5rem;">
+    <% if (successMessage) { %>
+      <div class="alert alert-success" role="alert">
+        <span><strong>Success:</strong> <%= successMessage %></span>
+        <button type="button" class="alert-close" onclick="this.parentElement.style.display='none';">&times;</button>
+      </div>
+    <% } %>
+
+    <% if (errorMessage) { %>
+      <div class="alert alert-danger" role="alert">
+        <span><strong>Error:</strong> <%= errorMessage %></span>
+        <button type="button" class="alert-close" onclick="this.parentElement.style.display='none';">&times;</button>
+      </div>
+    <% } %>
+  </div>
+
+  <main class="main-content">
+    <div class="container">

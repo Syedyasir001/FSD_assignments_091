@@ -1,0 +1,94 @@
+<%- include('partials/header', { pageTitle: item.itemName }) %>
+
+<div style="margin-bottom: 1.5rem;">
+  <a href="/lost-items" class="btn btn-secondary btn-sm">&larr; Back to Lost Items</a>
+</div>
+
+<div class="detail-layout">
+  <!-- Main Item Information -->
+  <div>
+    <div class="card">
+      <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
+        <span class="badge badge-category"><%= item.category %></span>
+        <span class="badge badge-lost"><%= item.status %></span>
+      </div>
+
+      <h1 class="detail-title"><%= item.itemName %></h1>
+      <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 1.5rem;">
+        Database Report ID: <code><%= item._id %></code>
+      </p>
+
+      <div class="detail-section">
+        <h3 class="detail-section-title">Item Description</h3>
+        <p style="white-space: pre-line; color: var(--text-main); font-size: 1.05rem;"><%= item.description %></p>
+      </div>
+
+      <div class="detail-section">
+        <h3 class="detail-section-title">Loss Incident Details</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+          <div style="background: var(--bg-subtle); padding: 1rem; border-radius: var(--radius-md);">
+            <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">LAST SEEN LOCATION</div>
+            <div style="font-size: 1.05rem; font-weight: 700; margin-top: 0.25rem;">&#128205; <%= item.lastSeenLocation %></div>
+          </div>
+
+          <div style="background: var(--bg-subtle); padding: 1rem; border-radius: var(--radius-md);">
+            <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">DATE LOST</div>
+            <div style="font-size: 1.05rem; font-weight: 700; margin-top: 0.25rem;">&#128197; <%= new Date(item.dateLost).toLocaleDateString() %></div>
+          </div>
+
+          <div style="background: var(--bg-subtle); padding: 1rem; border-radius: var(--radius-md);">
+            <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">REPORT FILED ON</div>
+            <div style="font-size: 1.05rem; font-weight: 700; margin-top: 0.25rem;">&#9201; <%= new Date(item.createdAt).toLocaleString() %></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar: Reporter Profile Card -->
+  <div>
+    <div class="card">
+      <h3 class="card-title" style="margin-bottom: 1rem;">Reported By</h3>
+
+      <% if (item.reportedBy) { %>
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem;">
+          <div class="profile-avatar" style="width: 52px; height: 52px; font-size: 1.3rem; margin-bottom: 0;">
+            <%= item.reportedBy.fullName.charAt(0).toUpperCase() %>
+          </div>
+          <div>
+            <h4 style="font-size: 1.1rem; margin-bottom: 0.15rem;"><%= item.reportedBy.fullName %></h4>
+            <span style="font-size: 0.825rem; color: var(--text-muted);"><%= item.reportedBy.department %></span>
+          </div>
+        </div>
+
+        <div style="font-size: 0.9rem; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.5rem;">
+          <div>
+            <strong>Email:</strong><br>
+            <a href="mailto:<%= item.reportedBy.email %>"><%= item.reportedBy.email %></a>
+          </div>
+          <div>
+            <strong>Contact:</strong><br>
+            <span><%= item.reportedBy.contactNumber %></span>
+          </div>
+        </div>
+
+        <a href="/students/<%= item.reportedBy._id %>" class="btn btn-secondary btn-sm" style="width: 100%;">
+          View Student Profile &rarr;
+        </a>
+      <% } else { %>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Reporting student record unavailable.</p>
+      <% } %>
+    </div>
+
+    <!-- Quick Help Card -->
+    <div class="card" style="background: #f0fdf4; border-color: #bbf7d0;">
+      <h4 style="color: #166534; font-size: 1rem; margin-bottom: 0.5rem;">Found this item?</h4>
+      <p style="font-size: 0.875rem; color: #15803d; margin-bottom: 1rem;">
+        If you have located this item on campus, report it in the Found section to connect with the owner.
+      </p>
+      <a href="/report-found" class="btn btn-success btn-sm" style="width: 100%;">Report Found Item</a>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

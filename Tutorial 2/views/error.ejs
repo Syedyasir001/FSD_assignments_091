@@ -1,0 +1,26 @@
+<%- include('partials/header', { pageTitle: 'Error ' + (typeof status !== 'undefined' ? status : '500') }) %>
+
+<div class="empty-state" style="max-width: 650px; margin: 3rem auto; border-color: var(--danger-border); background: var(--bg-surface);">
+  <div class="empty-icon" style="font-size: 4rem; color: var(--danger);">&#9888;</div>
+  <h1 style="font-size: 2rem; color: #991b1b; margin-bottom: 0.5rem;">
+    <%= typeof status !== 'undefined' ? status : 500 %> &mdash; 
+    <%= status === 403 ? 'Access Denied / Forbidden' : (status === 404 ? 'Record Not Found' : (status === 400 ? 'Invalid Request' : 'An Error Occurred')) %>
+  </h1>
+
+  <p class="empty-desc" style="color: var(--text-main); font-size: 1.05rem; font-weight: 500; margin-bottom: 1rem;">
+    <%= typeof message !== 'undefined' ? message : 'An unexpected error occurred while processing your request.' %>
+  </p>
+
+  <% if (typeof details !== 'undefined' && details) { %>
+    <div style="background: var(--bg-subtle); border-radius: var(--radius-md); padding: 1rem; text-align: left; margin: 1.5rem auto; font-family: monospace; font-size: 0.85rem; color: #475569; max-height: 200px; overflow-y: auto;">
+      <%= typeof details === 'object' ? JSON.stringify(details, null, 2) : details %>
+    </div>
+  <% } %>
+
+  <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;">
+    <button onclick="window.history.back()" class="btn btn-secondary">&larr; Go Back</button>
+    <a href="/" class="btn btn-primary">Return to Homepage</a>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
